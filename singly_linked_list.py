@@ -20,7 +20,10 @@ class LinkedList:
         temp = self.head
         print("[", end='')
         while temp:
-            print(str(temp.data) + ",", end='')
+            if temp.next:
+                print('"' + str(temp.data) + '", ', end='')
+            else:
+                print('"' + str(temp.data) + '"', end='')
             temp = temp.next
         print("] (" + str(self.size) + ")")
 
@@ -116,28 +119,17 @@ class LinkedList:
         self.size -= 1
         return temp
 
+    # Returns the index of a piece of data in the list, -1 otherwise
+    def indexOf(self, data):
+        index = 0
+        last = self.head
+        while last:
+            if last.data == data:
+                return index
+            last = last.next
+            index += 1
+        return -1
 
-# Code execution:
-linked_list = LinkedList()
-
-# Inserting
-linked_list.push(1)
-linked_list.push(2)
-linked_list.push(4)
-linked_list.pushAfter(linked_list.head.next, 3)
-linked_list.shift(0)
-linked_list.print()
-print("Here" + str(linked_list.size))
-print("---")
-
-# Removing
-linked_list.remove(linked_list.head)
-linked_list.remove(linked_list.head.next.next)
-linked_list.pop()
-# linked_list.pop()
-# linked_list.pop()
-# linked_list.pop()
-linked_list.unshift()
-linked_list.unshift()
-linked_list.unshift()
-linked_list.print()
+    # Returns whether a piece of data is contianed in the list
+    def contains(self, data):
+        return self.indexOf(data) != -1
