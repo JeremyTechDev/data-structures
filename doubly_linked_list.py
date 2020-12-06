@@ -5,12 +5,14 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+        self.prev = None
 
 
 # Linked List Class
 class LinkedList:
     def __init__(self):
         self.head = None
+        self.tail = None
         self.size = 0
 
     # Empty the linked list
@@ -19,8 +21,9 @@ class LinkedList:
         while trav:
             next = trav.next
             trav.next = None
+            trav.prev = None
             trav = next
-        self.head = trav = None
+        self.head = self.tail = trav = None
         self.size = 0
 
     # Checks if the linked list is empty
@@ -30,7 +33,13 @@ class LinkedList:
     # Inserts at the begining
     def insert_first(self, new_node):
         new_node = Node(new_node)
+        if self.is_empty():
+            self.head = self.tail = new_node
+            self.size += 1
+            return
+
         new_node.next = self.head
+        new_node.prev = None
         self.head = new_node
         self.size += 1
 
@@ -39,14 +48,14 @@ class LinkedList:
         new_node = Node(new_node)
 
         if self.is_empty():
-            self.head = new_node
+            self.head = self.tail = new_node
             self.size += 1
             return
 
-        last = self.head
-        while last.next:
-            last = last.next
-        last.next = new_node
+        new_node.next = None
+        new_node.prev = self.tail
+        self.tail.next = new_node
+        self.tail = new_node
         self.size += 1
 
     # Inserts at a given position
@@ -70,7 +79,10 @@ class LinkedList:
             curr_node = curr_node.next
             next_node = next_node.next
             index += 1
+
         new_node.next = next_node
+        new_node.prev = curr_node
+        next_node.prev = new_node
         curr_node.next = new_node
         self.size += 1
 
@@ -86,11 +98,7 @@ class LinkedList:
         if (self.is_empty()):
             print("No elements in the list")
             return
-
-        last = self.head
-        while last.next:
-            last = last.next
-        return last.data
+        return self.tail.data
 
     # Removes the first elem
     def remove_first(self):
@@ -109,35 +117,35 @@ class LinkedList:
             print("Nothing to remove")
             return
 
-        curr_node = self.head
-        next_node = self.head.next
+        temp = self.tail
+        self.tail = self.tail.prev
+        self.size -= 1
 
-        while next_node.next:
-            curr_node = curr_node.next
-            next_node = next_node.next
+        if self.is_empty():
+            self.head = None
+        else:
+            self.tail.next = None
 
-        temp = next_node
-        next_node = None
-        curr_node.next = None
         return temp.data
 
     # Removes the first ocurrences of a piece of data
     def remove(self, to_remove):
+        if self.head.data == to_remove:
+            return self.remove_first()
+        if self.tail.data == to_remove:
+            return self.remove_last()
+
         curr_node = self.head
         next_node = self.head.next
-
-        # If node is at first position, just skip it
-        if curr_node.data == to_remove:
-            return self.remove_first()
 
         # Traverse until the node is found
         while next_node:
             if next_node.data == to_remove:
-                temp = next_node  # Save next_node to to be able to return
+                temp = next_node
+                next_node.next.prev = curr_node
                 curr_node.next = next_node.next
                 self.size -= 1
                 return temp.data
-
             curr_node = curr_node.next
             next_node = next_node.next
         print("The element to remove was not found")
@@ -157,7 +165,7 @@ class LinkedList:
     def contains(self, data):
         return self.indexOf(data) != -1
 
-    # Print all elements
+        # Print all elements
     def print(self):
         temp = self.head
         print("[", end='')
