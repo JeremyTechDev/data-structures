@@ -2,7 +2,6 @@
 
 # Node Class
 class Node:
-    # Node initializer
     def __init__(self, data):
         self.data = data
         self.next = None
@@ -10,33 +9,34 @@ class Node:
 
 # Linked List Class
 class LinkedList:
-    # Linked List initializer
     def __init__(self):
         self.head = None  # Initialize head to null
         self.size = 0
 
-    # Print all elements
-    def print(self):
-        temp = self.head
-        print("[", end='')
-        while temp:
-            if temp.next:
-                print('"' + str(temp.data) + '", ', end='')
-            else:
-                print('"' + str(temp.data) + '"', end='')
-            temp = temp.next
-        print("] (" + str(self.size) + ")")
+    # Empty the linked list
+    def clear(self):
+        trav = self.head
+        while trav:
+            next = trav.next
+            trav.next = None
+            trav = next
+        self.head = trav = None
+        self.size = 0
 
-    # To insert at the begining
-    def shift(self, new_node):
-        new_node = Node(new_node)  # Create the new node
-        new_node.next = self.head  # Point new node next to the old head
-        self.head = new_node  # Point head to the new node
+    # Checks if the linked list is empty
+    def is_empty(self):
+        return self.size == 0
+
+    # Inserts at the begining
+    def insert_first(self, new_node):
+        new_node = Node(new_node)
+        new_node.next = self.head
+        self.head = new_node
         self.size += 1
 
-    # To insert at the end
-    def push(self, new_node):
-        new_node = Node(new_node)  # Create the new node
+    # Inserts at the end
+    def insert_last(self, new_node):
+        new_node = Node(new_node)
 
         # If the list is empty, just push the new node
         if self.head == None:
@@ -44,83 +44,111 @@ class LinkedList:
             self.size += 1
             return
 
-        # Move to the last node
         last = self.head
         while last.next:
             last = last.next
-        last.next = new_node  # Point the last element's next to the new node
+        last.next = new_node
         self.size += 1
 
-    # To insert after a certain node
-    def pushAfter(self, after, new_node):
-        if after == None:
-            print("The given after node is null")
+    # Inserts at a given position
+    def insert_at(self, at, new_elem):
+        if at < 0 or at > self.size:
+            print("The given at position is invalid")
             return
 
-        new_node = Node(new_node)  # Create the new node
-        new_node.next = after.next  # Point new node next to the after node next
-        after.next = new_node  # Point after next to the new node
+        if at == 0:
+            self.insert_first(new_elem)
+            return
+        if at == self.size:
+            self.insert_last(new_elem)
+            return
+
+        index = 1
+        new_node = Node(new_elem)
+        curr_node = self.head
+        next_node = self.head.next
+        while index < at:
+            curr_node = curr_node.next
+            next_node = next_node.next
+            index += 1
+        new_node.next = next_node
+        curr_node.next = new_node
         self.size += 1
 
-    # To remove a given node
-    def remove(self, node_to_remove):
-        trav1 = self.head  # Pointer to head
-        trav2 = self.head.next  # Pointed to the head's next
+    # Gets the first element of the list
+    def peek_first(self):
+        if (self.is_empty()):
+            print("No elements in the list")
+            return
+        return self.head.data
 
-        # If node is at first pos, just skip it
-        if node_to_remove == trav1:
-            temp = self.head  # Save head to to be able to return
+    # Gets the last element of the list
+    def peek_last(self):
+        if (self.is_empty()):
+            print("No elements in the list")
+            return
+
+        last = self.head
+        while last.next:
+            last = last.next
+        return last.data
+
+    # Removes all ocurrences of a piece of data
+    def remove(self, to_remove):
+        curr_node = self.head
+        next_node = self.head.next
+
+        # If node is at first position, just skip it
+        if curr_node.data == to_remove:
+            temp = self.head  # Save data to be able to return it
             self.head = self.head.next
             self.size -= 1
-            return temp
+            return temp.data
 
         # Traverse until the node is found
-        while trav2:
-            if node_to_remove == trav2:
-                temp = trav2  # Save trav2 to to be able to return
-                trav1.next = trav2.next  # Skip the node pointing the prev to the node's next
+        while next_node:
+            if next_node.data == to_remove:
+                temp = next_node  # Save next_node to to be able to return
+                curr_node.next = next_node.next
                 self.size -= 1
-                return temp
-            trav1 = trav1.next
-            trav2 = trav2.next
+                return temp.data
+
+            curr_node = curr_node.next
+            next_node = next_node.next
         print("The element to remove was not found")
 
-    # To remove the last element
-    def pop(self):
-        last = self.head
-
+    # Removes the last element
+    def remove_last(self):
         # If the list is empty
-        if last == None:
-            print("Nothing to pop")
+        if self.is_empty():
+            print("Nothing to remove")
             return
 
-        # If the list has only one element
-        if last.next == None:
-            temp = self.head  # Save head to to be able to return
-            self.head = None
-            self.size -= 1
-            return temp
+        curr_node = self.head
+        next_node = self.head.next
 
-        # Move to the last element and remove
-        while last.next.next:
-            last = last.next
-            temp = last.next  # Save last to to be able to return
-        last.next = None
-        self.size -= 1
-        return temp
+        while next_node.next:
+            curr_node = curr_node.next
+            next_node = next_node.next
 
-    # To remove the first elem
-    def unshift(self):
-        if self.head == None:
-            print("Nothing to unshift")
+        temp = next_node
+        next_node = None
+        curr_node.next = None
+        return temp.data
+
+    # Removes the first elem
+    def remove_first(self):
+        if self.is_empty():
+            print("Nothing to remove")
             return
-        temp = self.head  # Save trav2 to to be able to return
-        self.head = self.head.next  # skip the first element
+
+        temp = self.head
+        self.head = self.head.next
         self.size -= 1
-        return temp
+        return temp.data
 
     # Returns the index of a piece of data in the list, -1 otherwise
-    def indexOf(self, data):
+    def index_of(self, data):
         index = 0
         last = self.head
         while last:
@@ -133,3 +161,15 @@ class LinkedList:
     # Returns whether a piece of data is contianed in the list
     def contains(self, data):
         return self.indexOf(data) != -1
+
+        # Print all elements
+    def print(self):
+        temp = self.head
+        print("[", end='')
+        while temp:
+            if temp.next:
+                print('"' + str(temp.data) + '", ', end='')
+            else:
+                print('"' + str(temp.data) + '"', end='')
+            temp = temp.next
+        print("] (" + str(self.size) + ")")
