@@ -9,7 +9,7 @@ class Node:
 
 
 # Linked List Class
-class LinkedList:
+class DoublyLinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
@@ -41,6 +41,7 @@ class LinkedList:
         new_node.next = self.head
         new_node.prev = None
         self.head = new_node
+        self.head.next.prev = new_node
         self.size += 1
 
     # Inserts at the end
@@ -61,8 +62,7 @@ class LinkedList:
     # Inserts at a given position
     def insert_at(self, at, new_elem):
         if at < 0 or at > self.size:
-            print("The given at position is invalid")
-            return
+            raise Exception('Overflow: The given "at" postion is invalid')
 
         if at == 0:
             self.insert_first(new_elem)
@@ -82,29 +82,26 @@ class LinkedList:
 
         new_node.next = next_node
         new_node.prev = curr_node
-        next_node.prev = new_node
         curr_node.next = new_node
+        next_node.prev = new_node
         self.size += 1
 
     # Gets the first element of the list
     def peek_first(self):
         if (self.is_empty()):
-            print("No elements in the list")
-            return
+            raise Exception("No elements in the list")
         return self.head.data
 
     # Gets the last element of the list
     def peek_last(self):
         if (self.is_empty()):
-            print("No elements in the list")
-            return
+            raise Exception("No elements in the list")
         return self.tail.data
 
     # Removes the first elem
     def remove_first(self):
         if self.is_empty():
-            print("Nothing to remove")
-            return
+            raise Exception("Nothing to remove")
 
         temp = self.head
         self.head = self.head.next
@@ -114,22 +111,23 @@ class LinkedList:
     # Removes the last element
     def remove_last(self):
         if self.is_empty():
-            print("Nothing to remove")
-            return
+            raise Exception("Nothing to remove")
 
         temp = self.tail
         self.tail = self.tail.prev
+        if self.tail:
+            self.tail.next = None
         self.size -= 1
 
         if self.is_empty():
             self.head = None
-        else:
-            self.tail.next = None
-
         return temp.data
 
     # Removes the first ocurrences of a piece of data
     def remove(self, to_remove):
+        if self.is_empty():
+            raise Exception("Nothing to remove")
+
         if self.head.data == to_remove:
             return self.remove_first()
         if self.tail.data == to_remove:
@@ -148,7 +146,7 @@ class LinkedList:
                 return temp.data
             curr_node = curr_node.next
             next_node = next_node.next
-        print("The element to remove was not found")
+        raise Exception("The element to remove was not found")
 
     # Returns the index of a piece of data in the list, -1 otherwise
     def index_of(self, data):
@@ -163,7 +161,7 @@ class LinkedList:
 
     # Returns whether a piece of data is contianed in the list
     def contains(self, data):
-        return self.indexOf(data) != -1
+        return self.index_of(data) != -1
 
         # Print all elements
     def print(self):
