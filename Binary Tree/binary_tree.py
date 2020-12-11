@@ -9,7 +9,7 @@ class BinaryTree():
 
     # Insert a new node to the tree
     def insert(self, data):
-        if data <= self.data:
+        if data < self.data:
             if self.left == None:
                 self.left = BinaryTree(data)
             else:
@@ -75,6 +75,7 @@ class BinaryTree():
             return False
         return True
 
+    # Counts the number of unival nodes given a tree
     def count_univals(self):
         count = 0
         if self.is_node_unival():
@@ -82,5 +83,26 @@ class BinaryTree():
         if self.left:
             count += self.left.count_univals()
         if self.right:
-            count +=  self.right.count_univals()
+            count += self.right.count_univals()
         return count
+
+    # Returns the depth of the furthest node to the root
+    def max_depth(self):
+        left = right = 0
+        if self.left:
+            left = self.left.max_depth()
+        if self.right:
+            right = self.right.max_depth()
+        return max(left, right) + 1
+
+    # Returns the depth of the closest children to the root
+    def min_depth(self):
+        left = right = 0
+        if self.left:
+            left = self.left.min_depth()
+        if self.right:
+            right = self.right.min_depth()
+
+        if left == 0 or right == 0:
+            return (left if right == 0 else right) + 1
+        return min(left, right) + 1
