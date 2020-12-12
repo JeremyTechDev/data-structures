@@ -106,3 +106,9 @@ class BinaryTree():
         if left == 0 or right == 0:
             return (left if right == 0 else right) + 1
         return min(left, right) + 1
+
+    # Returns whether one path of the tree has a path sum equal to @param {sum}
+    def has_path_sum(self, sum):
+        if self.left == None and self.right == None:
+            return sum - self.data == 0
+        return (self.left and self.left.has_path_sum(sum - self.data)) or (self.right and self.right.has_path_sum(sum - self.data))

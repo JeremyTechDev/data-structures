@@ -113,6 +113,21 @@ class TestBinaryTree(unittest.TestCase):
         btree.insert(0)
         self.assertEqual(btree.min_depth(), 3)
 
+    def test_has_path_sum(self):
+        btree = BinaryTree(2)
+        self.assertTrue(btree.has_path_sum(2))
+        self.assertFalse(btree.has_path_sum(5))
+        btree.insert(5)
+        self.assertFalse(btree.has_path_sum(2))
+        self.assertTrue(btree.has_path_sum(7))
+        btree.insert(1)
+        self.assertTrue(btree.has_path_sum(3))
+        self.assertTrue(btree.has_path_sum(7))
+        btree.insert(7)
+        self.assertTrue(btree.has_path_sum(14))
+        self.assertTrue(btree.has_path_sum(3))
+        self.assertFalse(btree.has_path_sum(5))
+
 
 if __name__ == '__main__':
     unittest.main()
