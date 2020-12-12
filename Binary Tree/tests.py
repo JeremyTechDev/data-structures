@@ -1,5 +1,4 @@
 import unittest
-from unittest.signals import installHandler
 from binary_tree import BinaryTree
 
 
