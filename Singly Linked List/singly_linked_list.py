@@ -1,5 +1,5 @@
 # A complete linked list implementation
- 
+
 # Node Class
 class Node:
     def __init__(self, data):

@@ -20,6 +20,7 @@ class BinaryTree():
             else:
                 self.right.insert(data)
 
+    # Returns whether the tree contains a given value
     def contains(self, value):
         if self.data == value:
             return True
