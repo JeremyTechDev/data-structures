@@ -5,11 +5,6 @@ class Stack():
     def __init__(self):
         self.data = []
 
-    # # Prevent overwrites
-    # @property
-    # def data(self):
-    #     return self.data
-
     # Inserts a element at the top of the stack
     def push(self, element):
         self.data.append(element)
