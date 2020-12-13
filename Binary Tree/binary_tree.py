@@ -143,9 +143,10 @@ class BinaryTree():
         arr = self.convert_to_array()
         return self.build_balanced_tree(arr, 0, len(arr) - 1)
 
-
-"""
-arr = [1,2,3]
-        2
-     1     3
-"""
+    # Inverts a binary tree
+    def invert(self):
+        left = self.left
+        right = self.right
+        self.left = right.invert() if right else None
+        self.right = left.invert() if left else None
+        return self

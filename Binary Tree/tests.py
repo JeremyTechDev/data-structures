@@ -163,6 +163,19 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(btree.right.left.data, 3)
         self.assertEqual(btree.right.right.data, 5)
 
+    def test_invert(self):
+        btree = BinaryTree(2)
+        btree.insert(1)
+        btree.insert(3)
+        btree.insert(0)
+        btree = btree.invert()
+        self.assertEqual(btree.left.data, 3)
+        self.assertEqual(btree.left.left, None)
+        self.assertEqual(btree.left.right, None)
+        self.assertEqual(btree.right.data, 1)
+        self.assertEqual(btree.right.right.data, 0)
+        self.assertEqual(btree.right.left, None)
+
 
 if __name__ == '__main__':
     unittest.main()
