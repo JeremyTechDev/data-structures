@@ -150,3 +150,23 @@ class BinaryTree():
         self.left = right.invert() if right else None
         self.right = left.invert() if left else None
         return self
+
+    # Finds the height of a tree
+    def find_height(self):
+        left_height = right_height = 0
+        if self.left:
+            left_height = self.left.find_height()
+        if self.right:
+            right_height = self.right.find_height()
+        return max(left_height, right_height) + 1
+
+    # Returns whether a tree is balanced
+    def is_balanced(self):
+        if self.left == None and self.right == None:
+            return True
+        left_height = right_height = 0
+        if self.left:
+            left_height = self.left.find_height()
+        if self.right:
+            right_height = self.right.find_height()
+        return abs(left_height - right_height) <= 1

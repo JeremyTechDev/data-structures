@@ -176,6 +176,25 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(btree.right.right.data, 0)
         self.assertEqual(btree.right.left, None)
 
+    def test_find_height(self):
+        btree = BinaryTree(2)
+        self.assertEqual(btree.find_height(), 1)
+        btree.insert(3)
+        btree.insert(4)
+        self.assertEqual(btree.find_height(), 3)
+        btree.insert(1)
+        self.assertEqual(btree.find_height(), 3)
+
+    def test_is_balanced(self):
+        btree = BinaryTree(2)
+        self.assertTrue(btree.is_balanced())
+        btree.insert(3)
+        self.assertTrue(btree.is_balanced())
+        btree.insert(4)
+        self.assertFalse(btree.is_balanced())
+        btree.insert(1)
+        self.assertTrue(btree.is_balanced())
+
 
 if __name__ == '__main__':
     unittest.main()
