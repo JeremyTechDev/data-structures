@@ -160,10 +160,19 @@ class TestSinglyLinkedList(unittest.TestCase):
 
     def test_contains(self):
         llist = SinglyLinkedList()
-
         llist.insert_first(0)
         self.assertTrue(llist.contains(0))
         self.assertFalse(llist.contains(1))
+
+    def test_contains(self):
+        llist = SinglyLinkedList()
+        llist.insert_last(1)
+        llist.insert_last(2)
+        llist.insert_last(3)
+        llist.reverse()
+        self.assertEqual(llist.head.data, 3)
+        self.assertEqual(llist.head.next.data, 2)
+        self.assertEqual(llist.head.next.next.data, 1)
 
 
 if __name__ == '__main__':

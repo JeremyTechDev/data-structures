@@ -163,6 +163,20 @@ class DoublyLinkedList:
     def contains(self, data):
         return self.index_of(data) != -1
 
+    # Reverse the given linked list
+    def reverse(self):
+        prev = None
+        curr = self.head
+        while curr:
+            prev = curr.prev
+            curr.prev = curr.next
+            curr.next = prev
+            curr = curr.prev
+
+        # Set new head only if it was not empty
+        if prev != None:
+            self.head = prev.prev
+
         # Print all elements
     def print(self):
         temp = self.head
