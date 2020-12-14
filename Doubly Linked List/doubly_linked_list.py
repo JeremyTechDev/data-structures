@@ -177,7 +177,7 @@ class DoublyLinkedList:
         if prev != None:
             self.head = prev.prev
 
-        # Print all elements
+    # Print all elements
     def print(self):
         temp = self.head
         print("[", end='')
