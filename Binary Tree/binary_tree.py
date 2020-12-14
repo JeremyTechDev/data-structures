@@ -1,4 +1,6 @@
 # Binary Tree Implementation
+from typing import List
+
 
 # Node class for Binary Tree
 class BinaryTree():
@@ -38,12 +40,12 @@ class BinaryTree():
                     return self.right.contains(value)
 
     # Print all element is order
-    def printInOrder(self):
+    def print_in_order(self):
         if self.left != None:
-            self.left.printInOrder()
+            self.left.print_in_order()
         print(self.data)
         if self.right != None:
-            self.right.printInOrder()
+            self.right.print_in_order()
 
     # Returns the sum of all the values in the tree
     def sum(self):
@@ -113,3 +115,58 @@ class BinaryTree():
         if self.left == None and self.right == None:
             return sum - self.data == 0
         return (self.left and self.left.has_path_sum(sum - self.data)) or (self.right and self.right.has_path_sum(sum - self.data))
+
+    # Returns a sorted array version of the given tree
+    def convert_to_array(self):
+        arr = []
+        if self.left:
+            arr.extend(self.left.convert_to_array())
+        arr.append(self.data)
+        if self.right:
+            arr.extend(self.right.convert_to_array())
+        return arr
+
+    # Builds a balances BST from a sorted array
+    def build_balanced_tree(self, sorted_arr: List[int], start: int, end: int):
+        if start > end:
+            return None
+
+        mid = (start + end) // 2
+        root = BinaryTree(sorted_arr[mid])
+
+        root.left = self.build_balanced_tree(sorted_arr, start, mid - 1)
+        root.right = self.build_balanced_tree(sorted_arr, mid + 1, end)
+        return root
+
+    # Balances the height of the given tree
+    def balance(self):
+        arr = self.convert_to_array()
+        return self.build_balanced_tree(arr, 0, len(arr) - 1)
+
+    # Inverts a binary tree
+    def invert(self):
+        left = self.left
+        right = self.right
+        self.left = right.invert() if right else None
+        self.right = left.invert() if left else None
+        return self
+
+    # Finds the height of a tree
+    def find_height(self):
+        left_height = right_height = 0
+        if self.left:
+            left_height = self.left.find_height()
+        if self.right:
+            right_height = self.right.find_height()
+        return max(left_height, right_height) + 1
+
+    # Returns whether a tree is balanced
+    def is_balanced(self):
+        if self.left == None and self.right == None:
+            return True
+        left_height = right_height = 0
+        if self.left:
+            left_height = self.left.find_height()
+        if self.right:
+            right_height = self.right.find_height()
+        return abs(left_height - right_height) <= 1
