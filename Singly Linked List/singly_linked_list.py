@@ -158,6 +158,20 @@ class SinglyLinkedList:
     def contains(self, data):
         return self.index_of(data) != -1
 
+    # Reverses the given linked list
+    def reverse(self):
+        prev = None
+        curr = self.head
+        while curr:
+            temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = temp
+
+        # Set new head only if it was not empty
+        if prev != None:
+            self.head = prev
+
     # Print all elements
     def print(self):
         temp = self.head

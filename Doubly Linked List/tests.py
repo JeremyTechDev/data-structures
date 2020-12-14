@@ -157,9 +157,22 @@ class TestDoublyLinkedList(unittest.TestCase):
     def test_contains(self):
         llist = DoublyLinkedList()
         llist.insert_last(1)
-
         self.assertTrue(llist.contains(1))
         self.assertFalse(llist.contains(0))
+
+    def test_reverse(self):
+        llist = DoublyLinkedList()
+        llist.insert_last(1)
+        llist.insert_last(2)
+        llist.insert_last(3)
+        llist.reverse()
+        self.assertEqual(llist.head.data, 3)
+        self.assertEqual(llist.head.prev, None)
+        self.assertEqual(llist.head.next.data, 2)
+        self.assertEqual(llist.head.next.prev.data, 3)
+        self.assertEqual(llist.head.next.next.data, 1)
+        self.assertEqual(llist.head.next.next.prev.data, 2)
+        self.assertEqual(llist.head.next.next.next, None)
 
 
 if __name__ == '__main__':
