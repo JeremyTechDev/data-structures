@@ -3,13 +3,15 @@
 class MinHeap():
     def __init__(self):
         self.data = []
-        self.size = 0
 
     # Add an element to the min heap
     def add(self, elem):
-        self.size += 1
         self.data.append(elem)
         self.swim(len(self.data) - 1)
+
+    # Returns the number of element in the heap
+    def size(self):
+        return len(self.data)
 
     # Bubble up an element at a k position
     def swim(self, k):
@@ -30,12 +32,12 @@ class MinHeap():
 
             # Take the left children as smallest by default
             # Change only if right children is less than left children
-            if self.data[right] < self.data[left]:
+            if right < self.size() and self.data[right] < self.data[left]:
                 smallest = right
 
             # Keep swaping while k is less than parent and
             # we are not at the last position of the heap
-            if left >= self.size or self.data[k] < self.data[smallest]:
+            if left >= self.size() or self.data[k] < self.data[smallest]:
                 break
 
             self.swap(k, smallest)
@@ -50,7 +52,7 @@ class MinHeap():
 
     # Returns whether the heap is empty
     def is_empty(self):
-        return self.size == 0
+        return self.size() == 0
 
     # Returns the first element (smallest) of the heap
     def peek(self):
