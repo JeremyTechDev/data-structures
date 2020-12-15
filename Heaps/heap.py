@@ -4,14 +4,43 @@ class MinHeap():
     def __init__(self):
         self.data = []
 
+    # Returns the number of element in the heap
+    def size(self):
+        return len(self.data)
+
     # Add an element to the min heap
     def add(self, elem):
         self.data.append(elem)
         self.swim(len(self.data) - 1)
 
-    # Returns the number of element in the heap
-    def size(self):
-        return len(self.data)
+    # Removes and return the element with the highest priority (first element)
+    def poll(self):
+        if self.is_empty():
+            raise Exception("Min heap is empty")
+
+        polled = self.data[0]
+        self.remove(polled)
+        return polled
+
+    # Removes an element form the heap
+    def remove(self, elem):
+        if self.is_empty():
+            raise Exception("Min heap is empty")
+
+        index = self.index(elem)
+        if index == -1:
+            raise Exception(f"Heap does not contain the element <{elem}>")
+
+        self.swap(index, self.size() - 1)
+        self.data.pop()
+
+        # If the element was the last one, do nothing else
+        if index == self.size():
+            return
+
+        if not self.is_empty():
+            self.sink(index)
+            self.swim(index)
 
     # Bubble up an element at a k position
     def swim(self, k):
@@ -57,3 +86,14 @@ class MinHeap():
     # Returns the first element (smallest) of the heap
     def peek(self):
         return self.data[0] if not self.is_empty() else None
+
+    # Returns the index of an element in the heap, -1 if it is not contained
+    def index(self, elem):
+        for index, value in enumerate(self.data):
+            if value == elem:
+                return index
+        return -1
+
+    # Whether an element in contained in the heap
+    def contains(self, elem):
+        return self.index(elem) != -1
