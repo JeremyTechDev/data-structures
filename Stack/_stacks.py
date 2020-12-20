@@ -2,8 +2,11 @@
 
 # Stack Class (LIFO)
 class Stack():
-    def __init__(self):
-        self.data = []
+    def __init__(self, initial_data=[]):
+        if isinstance(initial_data, int):
+            self.data = [initial_data]
+            return
+        self.data = list(initial_data)
 
     # Inserts a element at the top of the stack
     def push(self, element):
@@ -28,3 +31,15 @@ class Stack():
     # Returns whether the stack is empty
     def is_empty(self):
         return self.size() == 0
+
+    # Represetantion method
+    def __repr__(self):
+        return f"Stack({repr(self.data)})"
+
+    # Convert to string method
+    def __str__(self):
+        return str(self.data)
+
+    # Len of linked list
+    def __len__(self):
+        return len(self.data)

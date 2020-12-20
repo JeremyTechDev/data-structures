@@ -1,24 +1,33 @@
-# Binary Tree Implementation
+# Binary Search Tree Implementation
 from typing import List
 
 
-# Node class for Binary Tree
-class BinaryTree():
-    def __init__(self, data):
-        self.data = data
+# Node class for Binary Search Tree
+class BinarySearchTree():
+    def __init__(self, initial_data=None):
+        self.data = None
         self.left = None
         self.right = None
+        if isinstance(initial_data, int):
+            self.data = initial_data
+        elif isinstance(initial_data, list):
+            for num in initial_data:
+                self.insert(num)
 
     # Insert a new node to the tree
     def insert(self, data):
+        if self.data == None:
+            self.data = data
+            return
+
         if data < self.data:
             if self.left == None:
-                self.left = BinaryTree(data)
+                self.left = BinarySearchTree(data)
             else:
                 self.left.insert(data)
         else:
             if self.right == None:
-                self.right = BinaryTree(data)
+                self.right = BinarySearchTree(data)
             else:
                 self.right.insert(data)
 
@@ -132,7 +141,7 @@ class BinaryTree():
             return None
 
         mid = (start + end) // 2
-        root = BinaryTree(sorted_arr[mid])
+        root = BinarySearchTree(sorted_arr[mid])
 
         root.left = self.build_balanced_tree(sorted_arr, start, mid - 1)
         root.right = self.build_balanced_tree(sorted_arr, mid + 1, end)
@@ -170,3 +179,18 @@ class BinaryTree():
         if self.right:
             right_height = self.right.find_height()
         return abs(left_height - right_height) <= 1
+
+    # Represetantion method
+    def __repr__(self):
+        arr = self.convert_to_array()
+        return f"BinarySearchTree({repr(arr)})"
+
+    # Convert to string method
+    def __str__(self):
+        arr = self.convert_to_array()
+        return str(arr)
+
+    # Len of linked list
+    def __len__(self):
+        arr = self.convert_to_array()
+        return len(arr)

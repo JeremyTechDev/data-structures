@@ -2,8 +2,11 @@
 
 # Queue Class (FIFO)
 class Queue():
-    def __init__(self):
-        self.data = []
+    def __init__(self, initial_data=[]):
+        if isinstance(initial_data, int):
+            self.data = [initial_data]
+            return
+        self.data = list(initial_data)
 
     # Inserts a new element the the queue
     def push(self, element):
@@ -30,3 +33,15 @@ class Queue():
     # Returns whether the queue is empty or not
     def is_empty(self):
         return len(self.data) == 0
+
+    # Represetantion method
+    def __repr__(self):
+        return f"Queue({repr(self.data)})"
+
+    # Convert to string method
+    def __str__(self):
+        return str(self.data)
+
+    # Len of linked list
+    def __len__(self):
+        return len(self.data)
