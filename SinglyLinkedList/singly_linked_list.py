@@ -5,15 +5,19 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
-        self.prev = None
 
 
 # Linked List Class
-class DoublyLinkedList:
-    def __init__(self):
+class SinglyLinkedList:
+    def __init__(self, initial_data=None):
         self.head = None
-        self.tail = None
         self.size = 0
+        if isinstance(initial_data, int):
+            self.head = Node(initial_data)
+            self.size = 1
+        elif isinstance(initial_data, list):
+            for num in initial_data:
+                self.insert_last(num)
 
     # Empty the linked list
     def clear(self):
@@ -21,9 +25,8 @@ class DoublyLinkedList:
         while trav:
             next = trav.next
             trav.next = None
-            trav.prev = None
             trav = next
-        self.head = self.tail = trav = None
+        self.head = trav = None
         self.size = 0
 
     # Checks if the linked list is empty
@@ -33,15 +36,8 @@ class DoublyLinkedList:
     # Inserts at the begining
     def insert_first(self, new_node):
         new_node = Node(new_node)
-        if self.is_empty():
-            self.head = self.tail = new_node
-            self.size += 1
-            return
-
         new_node.next = self.head
-        new_node.prev = None
         self.head = new_node
-        self.head.next.prev = new_node
         self.size += 1
 
     # Inserts at the end
@@ -49,27 +45,25 @@ class DoublyLinkedList:
         new_node = Node(new_node)
 
         if self.is_empty():
-            self.head = self.tail = new_node
+            self.head = new_node
             self.size += 1
             return
 
-        new_node.next = None
-        new_node.prev = self.tail
-        self.tail.next = new_node
-        self.tail = new_node
+        last = self.head
+        while last.next:
+            last = last.next
+        last.next = new_node
         self.size += 1
 
     # Inserts at a given position
     def insert_at(self, at, new_elem):
         if at < 0 or at > self.size:
-            raise Exception('Overflow: The given "at" postion is invalid')
+            raise Exception("Overflow: The given at position is invalid")
 
         if at == 0:
-            self.insert_first(new_elem)
-            return
+            return self.insert_first(new_elem)
         if at == self.size:
-            self.insert_last(new_elem)
-            return
+            return self.insert_last(new_elem)
 
         index = 1
         new_node = Node(new_elem)
@@ -79,11 +73,8 @@ class DoublyLinkedList:
             curr_node = curr_node.next
             next_node = next_node.next
             index += 1
-
         new_node.next = next_node
-        new_node.prev = curr_node
         curr_node.next = new_node
-        next_node.prev = new_node
         self.size += 1
 
     # Gets the first element of the list
@@ -96,7 +87,11 @@ class DoublyLinkedList:
     def peek_last(self):
         if (self.is_empty()):
             raise Exception("No elements in the list")
-        return self.tail.data
+
+        last = self.head
+        while last.next:
+            last = last.next
+        return last.data
 
     # Removes the first elem
     def remove_first(self):
@@ -113,14 +108,23 @@ class DoublyLinkedList:
         if self.is_empty():
             raise Exception("Nothing to remove")
 
-        temp = self.tail
-        self.tail = self.tail.prev
-        if self.tail:
-            self.tail.next = None
-        self.size -= 1
-
-        if self.is_empty():
+        if not self.head.next:
+            temp = self.head
             self.head = None
+            self.size -= 1
+            return temp.data
+
+        curr_node = self.head
+        next_node = self.head.next
+
+        while next_node.next:
+            curr_node = curr_node.next
+            next_node = next_node.next
+
+        temp = next_node
+        next_node = None
+        curr_node.next = None
+        self.size -= 1
         return temp.data
 
     # Removes the first ocurrences of a piece of data
@@ -130,8 +134,6 @@ class DoublyLinkedList:
 
         if self.head.data == to_remove:
             return self.remove_first()
-        if self.tail.data == to_remove:
-            return self.remove_last()
 
         curr_node = self.head
         next_node = self.head.next
@@ -139,8 +141,7 @@ class DoublyLinkedList:
         # Traverse until the node is found
         while next_node:
             if next_node.data == to_remove:
-                temp = next_node
-                next_node.next.prev = curr_node
+                temp = next_node  # Save next_node to to be able to return
                 curr_node.next = next_node.next
                 self.size -= 1
                 return temp.data
@@ -163,28 +164,40 @@ class DoublyLinkedList:
     def contains(self, data):
         return self.index_of(data) != -1
 
-    # Reverse the given linked list
+    # Reverses the given linked list
     def reverse(self):
         prev = None
         curr = self.head
         while curr:
-            prev = curr.prev
-            curr.prev = curr.next
+            temp = curr.next
             curr.next = prev
-            curr = curr.prev
+            prev = curr
+            curr = temp
 
         # Set new head only if it was not empty
         if prev != None:
-            self.head = prev.prev
+            self.head = prev
 
-    # Print all elements
-    def print(self):
-        temp = self.head
-        print("[", end='')
-        while temp:
-            if temp.next:
-                print('"' + str(temp.data) + '", ', end='')
-            else:
-                print('"' + str(temp.data) + '"', end='')
-            temp = temp.next
-        print("] (" + str(self.size) + ")")
+    # Represetantion method
+    def __repr__(self):
+        head = self.head
+        arr = [] * self.size
+        while head:
+            arr.append(head.data)
+            head = head.next
+        return "SinglyLinkedList({})".format(arr.__repr__())
+
+    # Convert to string method
+    def __str__(self):
+        head = self.head
+        res = ''
+        while head:
+            res += str(head.data)
+            if head.next:
+                res += '->'
+            head = head.next
+        return res
+
+    # Len of linked list
+    def __len__(self):
+        return self.size

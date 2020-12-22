@@ -1,8 +1,12 @@
 # Min Heap Implementation
 
-class MinHeap():
-    def __init__(self):
+class Heap():
+    def __init__(self, initial_data=[]):
         self.data = []
+        if isinstance(initial_data, int):
+            self.data = [initial_data]
+        elif isinstance(initial_data, list):
+            self.data = list(initial_data)
 
     # Returns the number of element in the heap
     def size(self):
@@ -97,3 +101,15 @@ class MinHeap():
     # Whether an element in contained in the heap
     def contains(self, elem):
         return self.index(elem) != -1
+
+    # Represetantion method
+    def __repr__(self):
+        return f"Heap({repr(self.data)})"
+
+    # Convert to string method
+    def __str__(self):
+        return str(self.data)
+
+    # Len of linked list
+    def __len__(self):
+        return len(self.data)

@@ -7,6 +7,10 @@ class TestStack(unittest.TestCase):
     def test_init(self):
         stack = Stack()
         self.assertEqual(stack.data, [])
+        stack = Stack(5)
+        self.assertEqual(stack.data, [5])
+        stack = Stack([1, 2, 3])
+        self.assertEqual(stack.data, [1, 2, 3])
 
     def test_push(self):
         stack = Stack()

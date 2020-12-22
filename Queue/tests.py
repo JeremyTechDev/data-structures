@@ -5,8 +5,12 @@ from _queues import Queue
 class TestQueues(unittest.TestCase):
 
     def test_init(self):
-        queue = Queue()
-        self.assertEqual(queue.data, [])
+        stack = Queue()
+        self.assertEqual(stack.data, [])
+        stack = Queue(5)
+        self.assertEqual(stack.data, [5])
+        stack = Queue([1, 2, 3])
+        self.assertEqual(stack.data, [1, 2, 3])
 
     def test_push(self):
         queue = Queue()
