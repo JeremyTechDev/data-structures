@@ -1,7 +1,6 @@
 from typing import List
 
 
-# Hash Table implementation
 # Hash Table Entry Class Definition
 class Entry:
     def __init__(self, key, value, hash):
@@ -32,8 +31,7 @@ class HashTable:
     default_capacity = 3
     default_load_factor = 0.75
 
-    max_load_factor = 0
-    capacity, threshold, size = 0, 0, 0
+    max_load_factor = capacity = threshold = size = 0
     table = []
 
     def __init__(self, capacity: int = 3, max_load_factor: float = 0.75) -> None:
@@ -42,8 +40,8 @@ class HashTable:
         if max_load_factor <= 0 or not isinstance(max_load_factor, float):
             raise Exception("Invalid max load factor")
 
-        self.capacity = max(self.default_capacity, capacity)
         self.max_load_factor = max_load_factor
+        self.capacity = max(self.default_capacity, capacity)
         self.threshold = self.capacity * self.max_load_factor
         self.table = [None] * self.capacity
 
@@ -59,6 +57,15 @@ class HashTable:
     def contains(self, key: str):
         bucket_index = self.hash(key)
         return self.__bucket_get_entry(bucket_index, key) != None
+
+    # Whether the table is empty
+    def is_empty(self):
+        return self.size == 0
+
+    # Clear the table
+    def clear(self):
+        self.table = [None] * self.capacity
+        self.size = 0
 
     # Insert or update an entry in the table
     def insert(self, key: str, value: int):
@@ -113,6 +120,8 @@ class HashTable:
         else:
             bucket.append(entry)
             self.size += 1
+            if self.size > self.threshold:
+                self.__resize_table()
             return None
 
     # Returns an entry given its bucket and key
@@ -128,6 +137,53 @@ class HashTable:
             if entry.key == key:
                 return entry
         return None
+
+    # Adds more buckets to the table and re-arranges all the entries in it
+    def __resize_table(self):
+        self.capacity *= 2
+        self.threshold = self.capacity * self.max_load_factor
+
+        new_table = [None] * self.capacity
+        for bucket in self.table:
+            if bucket != None:
+                for entry in bucket:
+                    bucket_index = self.hash(entry.key)
+                    new_bucket = new_table[bucket_index]
+                    if new_bucket == None:
+                        new_table[bucket_index] = new_bucket = []
+                    new_bucket.append(entry)
+                bucket = None
+        self.table = new_table
+
+    # Returns a list of all the keys in the table
+    def keys(self):
+        keys, i = [None] * self.size, 0
+        for bucket in self.table:
+            if bucket != None:
+                for entry in bucket:
+                    keys[i] = entry.key
+                    i += 1
+        return keys
+
+    # Returns a list of all the values in the table
+    def values(self):
+        values, i = [None] * self.size, 0
+        for bucket in self.table:
+            if bucket != None:
+                for entry in bucket:
+                    values[i] = entry.value
+                    i += 1
+        return values
+
+    # Returns a list of sets containing all the key-value pairs of the table
+    def items(self):
+        items, i = [None] * self.size, 0
+        for bucket in self.table:
+            if bucket != None:
+                for entry in bucket:
+                    items[i] = (entry.key, entry.value)
+                    i += 1
+        return items
 
     # Convert to string method
     def __str__(self):

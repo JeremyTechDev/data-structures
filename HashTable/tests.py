@@ -51,6 +51,22 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(table.contains('key'))
         self.assertFalse(table.contains('key1'))
 
+    def test_is_empty(self):
+        table = HashTable()
+        self.assertTrue(table.is_empty())
+        table.insert('key', 0)
+        self.assertFalse(table.is_empty())
+
+    def test_clear(self):
+        table = HashTable()
+        table.insert('key1', 1)
+        table.insert('key2', 2)
+        table.insert('key3', 3)
+        self.assertEqual(len(table), 3)
+        table.clear()
+        self.assertEqual(len(table), 0)
+        self.assertEqual(table.table, [None] * table.capacity)
+
     def test_insert(self):
         table = HashTable()
         self.assertRaises(Exception, table.insert, None, 0)
@@ -93,6 +109,28 @@ class TestHashTable(unittest.TestCase):
         self.assertEqual(len(table), 3)
         table.remove('key1')
         self.assertEqual(len(table), 2)
+
+    def test_keys(self):
+        table = HashTable()
+        table.insert('key1', 1)
+        table.insert('key2', 2)
+        table.insert('key3', 3)
+        self.assertEqual(table.keys(), ['key1', 'key2', 'key3'])
+
+    def test_values(self):
+        table = HashTable()
+        table.insert('key1', 1)
+        table.insert('key2', 2)
+        table.insert('key3', 3)
+        self.assertEqual(table.values(), [1, 2, 3])
+
+    def test_items(self):
+        table = HashTable()
+        table.insert('key1', 1)
+        table.insert('key2', 2)
+        table.insert('key3', 3)
+        self.assertEqual(
+            table.items(), [('key1', 1), ('key2', 2), ('key3', 3)])
 
 
 if __name__ == '__main__':
