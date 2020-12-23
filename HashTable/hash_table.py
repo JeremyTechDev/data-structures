@@ -20,9 +20,9 @@ class Entry:
     # Custom equality operator
     def __eq__(self, other) -> bool:
         if isinstance(other, Entry):
-            if hash != other.hash:
+            if self.hash != other.hash:
                 return False
-            return self == other
+            return self.key == other.key
 
         return NotImplemented
 
@@ -36,10 +36,10 @@ class HashTable:
     capacity, threshold, size = 0, 0, 0
     table = []
 
-    def __init__(self, capacity: int = 3, max_load_factor: int = 0.75) -> None:
+    def __init__(self, capacity: int = 3, max_load_factor: float = 0.75) -> None:
         if capacity < 0:
             raise Exception("Invalid capacity")
-        if max_load_factor <= 0 or not isinstance(max_load_factor, int):
+        if max_load_factor <= 0 or not isinstance(max_load_factor, float):
             raise Exception("Invalid max load factor")
 
         self.capacity = max(self.default_capacity, capacity)
@@ -48,7 +48,7 @@ class HashTable:
         self.table = [None] * self.capacity
 
     # Calculate the hash for a key
-    def hash(self, key: str):
+    def hash(self, key: str) -> int:
         hashsum = 0
         for idx, c in enumerate(key):
             hashsum += (idx + len(key)) ** ord(c)
@@ -58,7 +58,7 @@ class HashTable:
     # Wether the table contains a key or not
     def contains(self, key: str):
         bucket_index = self.hash(key)
-        return self.bucket_get_key(bucket_index, key) != None
+        return self.__bucket_get_entry(bucket_index, key) != None
 
     # Insert or update an entry in the table
     def insert(self, key: str, value: int):
@@ -83,9 +83,7 @@ class HashTable:
     def remove(self, key: str):
         if key == None:
             raise Exception("Invalid null key")
-
-        bucket_index = self.hash(key)
-        return self.__bucket_remove_entry(bucket_index, key)
+        return self.__bucket_remove_entry(self.hash(key), key)
 
     # Removes an entry from its corresponding bucket in the table
     def __bucket_remove_entry(self, bucket_index: int, key: str):
