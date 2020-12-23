@@ -1,10 +1,8 @@
-# Hash Table implementation
-# Hash Table Entry Class Definition
-
-
 from typing import List
 
 
+# Hash Table implementation
+# Hash Table Entry Class Definition
 class Entry:
     def __init__(self, key, value, hash):
         self.key = key
@@ -38,7 +36,7 @@ class HashTable:
     capacity, threshold, size = 0, 0, 0
     table = []
 
-    def __init__(self, capacity: int, max_load_factor: int) -> None:
+    def __init__(self, capacity: int = 3, max_load_factor: int = 0.75) -> None:
         if capacity < 0:
             raise Exception("Invalid capacity")
         if max_load_factor <= 0 or not isinstance(max_load_factor, int):
@@ -68,7 +66,7 @@ class HashTable:
             raise Exception("Invalid null key")
 
         entry = Entry(key, value, self.hash(key))
-        return self.bucket_insert_entry(entry.hash, entry)
+        return self.__bucket_insert_entry(entry.hash, entry)
 
     # Gets a the value of a key in the table
     def get(self, key: str):
@@ -76,7 +74,7 @@ class HashTable:
             raise Exception("Invalid null key")
 
         bucket_index = self.hash(key)
-        entry = self.bucket_get_entry(bucket_index, key)
+        entry = self.__bucket_get_entry(bucket_index, key)
         if entry == None:
             return None
         return entry.value
@@ -87,11 +85,11 @@ class HashTable:
             raise Exception("Invalid null key")
 
         bucket_index = self.hash(key)
-        return self.bucket_remove_entry(bucket_index, key)
+        return self.__bucket_remove_entry(bucket_index, key)
 
     # Removes an entry from its corresponding bucket in the table
-    def bucket_remove_entry(self, bucket_index: int, key: str):
-        entry = self.bucket_get_entry(bucket_index, key)
+    def __bucket_remove_entry(self, bucket_index: int, key: str):
+        entry = self.__bucket_get_entry(bucket_index, key)
         if entry == None:
             return None
 
@@ -102,14 +100,14 @@ class HashTable:
 
     # Inserts an entry in its corresponding bucket in the table
     # Returns the old value is the entry was just updates, None if its a new one
-    def bucket_insert_entry(self, bucket_index: int, entry: Entry):
+    def __bucket_insert_entry(self, bucket_index: int, entry: Entry):
         bucket = self.table[bucket_index]
 
         # If the bucket was empty, create a new list in it
         if bucket == None:
             self.table[bucket_index] = bucket = []
 
-        entry_exists = self.bucket_get_entry(bucket_index, entry.key)
+        entry_exists = self.__bucket_get_entry(bucket_index, entry.key)
         if entry_exists:
             old_value = entry_exists.value
             entry_exists.value = entry.value
@@ -120,7 +118,7 @@ class HashTable:
             return None
 
     # Returns an entry given its bucket and key
-    def bucket_get_entry(self, bucket_index: int, key: str):
+    def __bucket_get_entry(self, bucket_index: int, key: str) -> Entry:
         if key == None:
             return None
 
